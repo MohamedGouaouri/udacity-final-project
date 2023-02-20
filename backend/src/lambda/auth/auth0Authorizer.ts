@@ -17,9 +17,7 @@ const logger = createLogger('auth')
 // DONE
 const jwksUrl = 'https://dev-fl71ve0pcd3ast8v.us.auth0.com/.well-known/jwks.json'
 
-// const client = new JwksClient({
-//   jwksUri: jwksUrl
-// })
+
 
 export const handler = async (
   event: CustomAuthorizerEvent
@@ -63,7 +61,9 @@ export const handler = async (
 
 async function verifyToken(authHeader: string): Promise<JwtPayload> {
   // Get token from request
+
   const token = getToken(authHeader)
+
   const jwt: Jwt = decode(token, { complete: true }) as Jwt
 
   // TODO: Implement token verification
@@ -85,12 +85,11 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
     Verify the claims in the JWT token according to your application's requirements, such as the issuer, audience, and expiration time.
   */
 
-  const response = await Axios.get(jwksUrl)
-  const keys = response.data.keys
+  const response = await (await Axios.get(jwksUrl)).data
+  const keys: any[] = response['keys']
   const signingKeys = keys
-    .find(key => key.id === jwt.header.kid)
+    .find(key => key.kid === jwt.header.kid)
 
-  logger.info('signing keys', signingKeys)
   if (!signingKeys) {
     throw new Error('JWKS endpoint does not contain any keys')
   }
