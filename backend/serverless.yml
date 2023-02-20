@@ -35,34 +35,6 @@ provider:
   logs:
     # Enable API Gateway logs
     restApi: true
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - codedeploy:*
-      Resource:
-        - '*'
-
-    - Effect: Allow
-      Action:
-        - dynamodb:Scan # to fetch all items from dynamodb
-        - dynamodb:PutItem # to create an item in dynamodb
-        - dynamodb:GetItem # to get a todo
-        - dynamodb:DeleteItem # to delete a todo
-        - dynamodb:UpdateItem # To update a todo
-        - dynamodb:Query # To update a todo
-      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
-    
-    - Effect: Allow
-      Action:
-        - s3:PutObject
-        - s3:GetObject
-      Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
-
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.TODOS_CREATED_AT_INDEX}
-    
 
   iam:
     role:
